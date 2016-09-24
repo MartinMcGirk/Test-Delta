@@ -1,20 +1,27 @@
-# MEAN Stack Single Page Application Starter
+# Test Delta
 
-This is a repo for a starter appliation for a Single Page MEAN Stack application. Just download and install and you have a good foundation for building application. 
+This is a side project I built to be a proof of concept for an online testing website. The company I worked for used a written test (60 minute time limit) as part of their interview process, but the recruitment company they used sent the test out in PDF format to applicants and took it on faith that the 60 minute time limit was adhered to. I built this site as a demo of how we could issue the tests ourselves and enforce the time limit at the same time.
 
-## Installation
-1. Download the repository
-2. Install npm modules: `npm install`
-3. Install bower dependencies `bower install`
-4. Start up the server: `node server.js`
-5. View in browser at http://localhost:8080
+This project was also a way to get some experience of the MEAN stack (MongoDB, Express, Agile, Node), none of which I had used before. It is based on the MEAN starter kit project that you can find on github.
 
-Use this starter kit to build any MEAN stack application you like.
+## Features
+1. Sign up and sign in
+2. Create tests with time limits
+3. Create questions of various types (multiple choice, freeform, code)
+4. Automatic marking of MCQ and freeform questions based on criteria set by test admin
+5. Tests can be assigned to candidates and unique links generated
+6. Tests can be taken by candidates with a time limit enforced.
+7. Playback of freeform and code quesitons, character by character, so you can check that answers haven't been copied and pasted.
+8. See candidate marks at a glance, and expand to see their answers in detail.
 
-If you have any questions or requests, email us at [chris@scotch.io](mailto:chris@scotch.io) and we'll keep updating this to make it perfect.
+I've got it hosted at [http://www.testdelta.com](http://www.testdelta.com) if you want to see it in action.
 
-## Future Additions
-- CRUD examples
-- Development and Production Environments
-- Link examples
-- Single Page AngularJS Animations
+## To run on a MEAN Digital Ocean box
+- rm /opt/mean
+- cd /opt/
+- git pull this_project
+- cd your_project
+- npm install
+- npm install forever -g
+- PORT=80 forever server.js
+- or to run as a daemon: PORT=80 forever start server.js
