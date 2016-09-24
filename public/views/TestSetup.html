@@ -1,0 +1,271 @@
+<style type="text/css">
+    .panel-body {
+        padding: 0px;
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    /* show the move cursor as the user moves the mouse over the panel header.*/
+    .sortable-container .panel-heading {
+        cursor: default;
+    }
+
+    section {
+        padding: 50px 0;
+    }
+
+    h1 {
+        margin-top: 40px;
+        margin-bottom: 0px;
+    }
+
+    .h4, .h5, .h6, h4, h5, h6 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .moveButtons {
+        width: 30px;
+        display: inline-block;
+    }
+
+    .iconButton {
+        cursor: pointer;
+    }
+
+    .iconButtonRight {
+        cursor: pointer;
+        padding-left: 10px;
+    }
+</style>
+
+<section class="bg-primary" id="introduction" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span><h1>Test Setup - {{ test_data.test_name }}</h1></span>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="addQuestions">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Single button -->
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Add a New Question <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a ng-click="addMcqQuestion()">Multiple choice question</a></li>
+                        <li><a ng-click="addFreeformQuestion()">Freeform text question</a></li>
+                        <li><a ng-click="addCodeQuestion()">Coding question</a></li>
+                        <li><a ng-click="addSection()">Section Break</a></li>
+                    </ul>
+                    <br /><br />
+                    <!-- FREEFORM TEXT QUESTION MODAL -->
+                    <div class="modal fade" id="freeFormModal" tabindex="-1" role="dialog" aria-labelledby="freeFormModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="freeFormModalLabel">Add FreeForm Question</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <input type="hidden" id="edit-freeform-question-id">
+                                        <div class="form-group">
+                                            <label for="edit-freeForm-question-text" class="control-label">Question text:</label>
+                                            <textarea class="form-control" ng-model="testTheory.question_text" id="edit-freeForm-question-text"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="edit-freeForm-question-keywords">Answer keywords (comma separated)</label>
+                                            <textarea class="form-control" ng-model="testTheory.desired_keywords" id="edit-freeForm-question-keywords"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="edit-freeForm-question-points">Points</label>
+                                            <input type="number" class="form-control" ng-model="testTheory.points_available" id="edit-freeForm-question-points">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" ng-click="saveFreeformQuestion()">Save Question</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END FREEFORM TEXT QUESTION MODAL -->
+                    <!-- MCQ QUESTION MODAL -->
+                    <div class="modal fade" id="mcqModal" tabindex="-1" role="dialog" aria-labelledby="mcqModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="mcqModalLabel">Add Multiple Choice Question</h4>
+                                </div>
+                                <div class="modal-body">
+                                <div class="modal-body">
+                                    <form>
+                                        <input type="hidden" id="edit-mcq-question-index">
+                                        <div class="form-group">
+                                            <label for="edit-mcq-question-text" class="control-label">Question text:</label>
+                                            <textarea class="form-control" id="edit-mcq-question-text" ng-model="testTheory.question_text"></textarea>
+                                        </div>
+
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <th>Possible Answer</th>
+                                                <th>Correct Answer(s)</th>
+                                                <th></th>
+                                            </tr>
+                                            <tr ng-repeat="answer in testTheory.possible_answers track by $index">
+                                                <td><input type="text" ng-model="answer.answer"></td>
+                                                <td><input type="checkbox" name="possibleAnswers" ng-model="answer.correct" ng-checked="answer.correct"></td>
+                                                <td><button type="submit" class="btn btn-default" ng-click="removeMcqAnswer(answer)">Remove</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">
+                                                    <button type="submit" class="btn btn-default" ng-click="addMcqAnswer()">Add new answer</button>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <div class="form-group">
+                                            <label for="edit-freeForm-question-points">Points</label>
+                                            <input type="number" class="form-control" ng-model="testTheory.points_available" id="edit-mcq-question-points">
+                                        </div>
+
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" ng-click="saveMcqQuestion()">Save Question</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END MCQ QUESTION MODAL -->
+                <!-- CODE TEXT QUESTION MODAL -->
+                <div class="modal fade" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="codeModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="codeModalLabel">Add Code Question</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <input type="hidden" id="edit-code-question-id">
+                                    <div class="form-group">
+                                        <label for="edit-code-question-text" class="control-label">Question text:</label>
+                                        <textarea class="form-control" ng-model="testTheory.question_text" id="edit-code-question-text"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit-code-question-points">Points</label>
+                                        <input type="number" class="form-control" ng-model="testTheory.points_available" id="edit-code-question-points">
+                                    </div>
+                                    <div class="form-group">
+                                    <label for="edit-code-question-fillerText">Filler Text</label>
+                                    <div id="edit-code-question-fillerText" ui-ace="{theme:'crimson_editor',
+                                 mode:'csharp',
+                                 advanced: {
+                                    fontSize: '18px'}}" ng-model="testTheory.filler_code">
+                                    </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" ng-click="saveCodeQuestion()">Save Question</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END CODE TEXT QUESTION MODAL -->
+                    <!-- SECTION TEXT QUESTION MODAL -->
+                    <div class="modal fade" id="sectionModal" tabindex="-1" role="dialog" aria-labelledby="sectionModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="fsectionModalLabel">Add A Section Break</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <input type="hidden" id="edit-section-question-id">
+                                        <div class="form-group">
+                                            <label for="edit-section-question-text" class="control-label">Section Break Text:</label>
+                                            <textarea class="form-control" rows="10" ng-model="testTheory.question_text" id="edit-section-question-text"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" ng-click="saveSectionBreak()">Save Section</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END SECTION TEXT QUESTION MODAL -->
+                    <div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="saveModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="saveModalLabel">Save Successful</h4>
+                                </div>
+                                <div class="modal-body">
+                                    Your test has been successfully saved.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sortable-container">
+                <!--<ul id="draggablePanelList" class="list-unstyled">-->
+                    <div ng-class="(question.question_type!='section') ? 'panel panel-primary' : 'panel panel-default'" ng-class="panel-default : question.question_type=='section'" ng-repeat="question in test_data.questions track by $index">
+                        <div class="panel-heading" >
+                            <h4>
+                                <span class="moveButtons">
+                                    <i class="fa fa-caret-up iconButton" title="Move Up" ng-if="$index > 0" ng-click="moveUp($index)"></i>
+                                    <i class="fa fa-caret-down iconButton" title="Move Down" ng-if="$index != test_data.questions.length-1" ng-click="moveDown($index)"></i>
+                                </span>
+                                {{question.question_type | uppercase}} - {{question.question_text | limitTo: 30 }}<span ng-if="question.question_text.length > 30">...</span>
+                                <span class="pull-right">
+                                    <i class="fa fa-pencil-square-o iconButtonRight" title="Edit Question" ng-if="question.question_type === 'freeform'" class="btn btn-default" ng-click="editFreeformQuestion(question, $index)"></i>
+                                    <i class="fa fa-pencil-square-o iconButtonRight" title="Edit Question" ng-if="question.question_type === 'mcq'" class="btn btn-default" ng-click="editMcqQuestion(question, $index)"></i>
+                                    <i class="fa fa-pencil-square-o iconButtonRight" title="Edit Question" ng-if="question.question_type === 'code'" ng-click="editCodeQuestion(question, $index)"></i>
+                                    <i class="fa fa-pencil-square-o iconButtonRight" title="Edit Section" ng-if="question.question_type === 'section'" ng-click="editSection(question, $index)"></i>
+                                    <i class="fa fa-times iconButtonRight" title="Remove Question" ng-click="removeQuestion(question)" index></i>
+                                </span>
+                            </h4>
+                        </div>
+                    </div>
+                <!--</ul>-->
+                </div>
+                <span ui-view></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <button type="button" class="btn btn-primary" ng-click="SaveTest()">
+                    Save Test
+                </button>
+            </div>
+        </div>
+    </div>
+</section>

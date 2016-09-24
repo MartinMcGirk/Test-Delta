@@ -1,0 +1,260 @@
+<style type="text/css">
+    .panel-body {
+        padding: 0px;
+    }
+
+    a {
+        cursor: pointer;
+        color: white;
+    }
+
+    .takeTestLink{
+        cursor: pointer;
+        color: black;
+    }
+
+    section {
+        padding: 50px 0;
+    }
+
+    h1 {
+        margin-top: 40px;
+        margin-bottom: 0px;
+    }
+
+    .h4, .h6, h4, h6 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    h5{
+        margin-top: 7px;
+    }
+
+    .moveButtons {
+        width: 30px;
+        display: inline-block;
+    }
+
+    .btn-group{
+        margin-bottom: 8px;
+    }
+
+    .iconButton {
+        cursor: pointer;
+        padding-left: 10px;;
+    }
+
+    .finished {
+        border: 1px solid transparent;
+        border-radius: 4px;
+        padding-left: 4px;
+        padding-bottom: 2px;
+        cursor: pointer;
+    }
+
+    .checkbox {
+        margin-bottom: 0px;;
+    }
+
+    .questionHeader{
+        margin-top: 7px;
+    }
+
+    .textarea {
+        margin-top: 0px;;
+    }
+
+    .panel-body {
+        max-height: 600px;
+        overflow: auto;
+    }
+</style>
+
+<section class="bg-primary" id="introduction" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span>
+                    <h1>Candidate Management</h1>
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="addQuestions">
+    <div class="container">
+        <div class="row">
+            <!-- CODE TEXT QUESTION MODAL -->
+            <div class="modal fade" id="candidateModal" tabindex="-1" role="dialog" aria-labelledby="candidateModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="candidateModalLabel">Send a test to {{candidate.candidate.candidate_name}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="candidateName">Candidate name</label>
+                                    <input type="text" class="form-control" ng-model="candidate.candidate.candidate_name" ng-disabled="getCandidateState(candidate) !== 'NoTest'" id="candidateName" placeholder="Jane Doe">
+                                </div>
+                                <div class="form-group">
+                                    <label for="candidateEmail">Email address</label>
+                                    <input type="email" class="form-control" ng-model="candidate.candidate.candidate_email" ng-disabled="getCandidateState(candidate) !== 'NoTest'" id="candidateEmail" placeholder="JaneDoe@Example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="candidateTest">Assign {{candidate.candidate.candidate_name}} a test</label>
+                                    <select class="form-control" ng-model="candidate.candidate.test_id" ng-disabled="getCandidateState(candidate) != 'NoTest' && getCandidateState(candidate) != 'NotSent'" id="candidateTest">
+                                        <option value="">---Please select---</option>
+                                        <option ng-repeat="test in allTests" value="{{test._id}}">{{test.test.test_name}}</option>
+                                    </select>
+                                </div>
+                                <label ng-if="candidate._id != ''">
+                                    Candidate Test Link
+                                </label>
+                                <p ng-if="getCandidateState(candidate) == 'NotStarted'"><a class="takeTestLink" target="_blank" href="http://www.TestDelta.com/#/TakeTest/{{candidate._id}}">http://www.TestDelta.com/#/TakeTest/{{candidate._id}}</a></p>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="saveCandidate(candidate)" ng-show="getCandidateState(candidate) == 'NoTest' || getCandidateState(candidate) == 'NotSent'">Save and Send Test</button>
+                            <button type="button" class="btn btn-primary" ng-click="resendTest(candidate)" ng-show="getCandidateState(candidate) != 'NoTest' && getCandidateState(candidate) != 'NotSent'">Resend Test</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END CODE TEXT QUESTION MODAL -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="deleteModalLabel">Delete Candidate</h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete {{candidate.candidate.candidate_name}}?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="deleteCandidate(candidate._id)">Delete {{candidate.candidate.candidate_name}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Single button -->
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-primary" ng-click="addNewCandidate()">
+                        Add a new candidate
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sortable-container">
+                <!--<ul id="draggablePanelList" class="list-unstyled">-->
+                    <div class="panel panel-primary" ng-repeat="candidate in test_data | orderBy: 'candidate.candidate_name'" ng-init="questionIndex=$index">
+                        <div class="panel-heading" >
+                            <h4>
+                                <span>{{candidate.candidate.candidate_name | uppercase}}</span>
+                                <span class="pull-right">
+
+                                    <i class="fa fa-pencil-square-o iconButton" title="Edit Candidate" ng-show="getCandidateState(candidate) == 'NoTest'" ng-click="actionsForCandidate(candidate)"></i>
+                                    <i class="fa fa-envelope-o iconButton" title="Test Sent to Candidate" ng-show="getCandidateState(candidate) == 'NotStarted'" ng-click="actionsForCandidate(candidate)"></i>
+                                    <!--<i class="fa fa-cogs iconButton" title="Candidate is currently taking test" ng-show="getCandidateState(candidate) == 'Started'"></i>-->
+                                    <span ng-show="getCandidateState(candidate) == 'Finished'" class="finished alert-success" title="Candidate has finished test"
+                                          data-toggle="collapse" data-parent="#accordion" href="#collapse{{questionIndex}}" aria-expanded="false" aria-controls="collapse{{questionIndex}}">
+                                        {{getCandidateScore(candidate)}}
+                                        <i class="fa fa-check-square iconButton"></i>
+                                    </span>
+                                    <span ng-show="getCandidateState(candidate) == 'Started'" class="finished alert-warning" title="Candidate is currently sitting test"
+                                          data-toggle="collapse" data-parent="#accordion" href="#collapse{{questionIndex}}" aria-expanded="false" aria-controls="collapse{{questionIndex}}">
+                                        {{getCandidateScore(candidate)}}
+                                        <i class="fa fa-cogs iconButton"></i>
+                                    </span>
+                                    <i class="fa fa-times iconButton" title="Remove Candidate" ng-click="deleteCandidateDialog(candidate)"></i>
+                                </span>
+                            </h4>
+                        </div>
+                        <div ng-if="getCandidateState(candidate) == 'Finished' || getCandidateState(candidate) == 'Started'" id="collapse{{questionIndex}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <div class="container-fluid">
+                                    <div class="row" >
+                                        <table class="table" >
+                                            <tr>
+                                                <th>
+                                                    Question
+                                                </th>
+                                                <th>
+                                                    Candidate Answer
+                                                </th>
+                                                <th>
+
+                                                </th>
+                                            </tr>
+                                            <tr ng-repeat="question in getQuestionsWithoutSections(candidate)" ng-init="questionIndex=$index">
+                                            <!--<tr ng-repeat="question in candidate.candidate.test.questions" ng-init="questionIndex=$index">-->
+                                                <td width="20%">
+                                                    <div>
+                                                        <h5>{{question.question_text}}</h5>
+                                                    </div>
+                                                </td>
+                                                <td width="80%">
+                                                    <div class="checkbox" ng-if="question.question_type=='mcq'"  ng-repeat="answer in question.possible_answers">
+                                                        <label>
+                                                            <h5><input type="checkbox" disabled="disabled" name="question{{ questionIndex }}" ng-model="answer.chosen" value="{{possibleAnswer.answer}}">{{answer.answer}}</h5>
+                                                        </label>
+                                                    </div>
+
+                                                    <div ng-if="question.question_type=='freeform'" class="textarea">
+                                                        <textarea class="form-control" ng-model="question.candidate_answer" readonly rows="5"></textarea>
+                                                        <div ng-init="sliderValue=0" >
+                                                            <rzslider rz-slider-model="sliderValue"
+                                                                      rz-slider-on-change="changeSlider(question, sliderValue)"
+                                                                      rz-slider-floor="0"
+                                                                      rz-slider-ceil="question.answer_record.length"></rzslider>
+                                                        </div>
+                                                    </div>
+
+                                                    <div ng-if="question.question_type=='code'">
+                                                        <div ui-ace="{theme:'crimson_editor',
+                                                                        mode:'csharp',
+                                                                        advanced: {
+                                                                            fontSize: '16px'
+                                                                            }
+                                                                        }"
+                                                             ng-model="question.filler_code">
+                                                        </div>
+                                                        <div ng-init="sliderValue=0" >
+                                                            <rzslider rz-slider-model="sliderValue"
+                                                                      rz-slider-on-change="changeSlider(question, sliderValue)"
+                                                                      rz-slider-floor="0"
+                                                                      rz-slider-ceil="question.answer_record.length"></rzslider>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td width="10%" ng-init="mark = markQuestion(question)" class="helpContent {{mark.status}}" title="{{mark.message}}">
+                                                    <i ng-show="mark.status == 'success'"  class="fa fa-check-square"></i>
+                                                    <i ng-show="mark.status == 'warning'" title="{{mark.message}}" class="fa fa-exclamation-triangle"></i>
+                                                    <i ng-show="mark.status == 'danger'" title="{{mark.message}}" class="fa fa-times"></i>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!--</ul>-->
+                </div>
+                <span ui-view></span>
+            </div>
+        </div>
+    </div>
+</section>

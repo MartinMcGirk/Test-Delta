@@ -1,0 +1,19 @@
+{
+	"name": "angular",
+	"version": "1.0.0",
+	"dependencies": {
+		"bootstrap": "latest",
+		"angular": "latest",
+		"angular-route": "latest",
+        "jquery": "latest",
+        "wow.js": "latest",
+        "ace-builds": "latest",
+        "angular-ui-ace": "latest",
+	    "angular-ui-router": "latest",
+	    "jquery-ui": "latest",
+	    "angular-sortable-view" : "latest",
+	  	"angular-timer": "latest",
+	  	"humanize-duration": "latest",
+	  	"angularjs-slider": "latest"
+	}
+}

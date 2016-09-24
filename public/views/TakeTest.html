@@ -1,0 +1,96 @@
+<style>
+    #questions{
+        padding: 50px 0;
+    }
+
+    .preText {
+        white-space: pre-wrap;
+    }
+</style>
+
+<section class="bg-primary" id="introduction"  ng-if="!testExpired()">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="hideableHeader">
+                <span id="testTitle">
+                    <h1  ng-if="!test_data.test.test_started">Hi {{ test_data.candidate_name }},</h1>
+                    <h1  ng-if="test_data.test.test_started">Welcome back {{ test_data.candidate_name }},</h1>
+                </span>
+                <span class="pull-right"><h4 class="pull-right" id="clock"></h4></span>
+
+                    <h4>You've been sent the "{{ test_data.test.test_name }}" test to complete. This test has a time limit of {{test_data.test.time_limit }} minutes.</h4>
+                    <h4 class="preText">{{test_data.test.test_instructions}}</h4>
+                    <form class="form-inline">
+                        <h3><button type="submit" class="btn btn-default" ng-click="StartTest()">Start Test</button></h3>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="questions" ng-if="!testExpired()">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6" ng-if="test_data.test.questions.length > 0">
+                <h4 ng-if="getCurrentQuestion().question_type!='section'">Question {{ currentQuestionDisplayIndex + 1 }} of {{getQuestionsTotalWithoutSections()}}</h4>
+            </div>
+            <div class="col-lg-6">
+                <h4 class="pull-right"><timer ng-if="test_data.test.questions.length > 0" end-time="test_data.test.test_expires">{{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></h4>
+            </div>
+        </div>
+        <div class="row" ng-if="test_data.test.questions.length > 0">
+            <div class="col-lg-12">
+                <table class="table" ng-if="getCurrentQuestion().question_type!='section'">
+                    <tr>
+                        <td width="5%">
+                            <h4>Q{{ currentQuestionDisplayIndex + 1 }}.</h4>
+                        </td>
+                        <td width="95%">
+                            <h4 class="preText">{{getCurrentQuestion().question_text}}</h4>
+
+                            <div class="checkbox" ng-if="getCurrentQuestion().question_type=='mcq'"  ng-repeat="answer in getCurrentQuestion().possible_answers">
+                                <label>
+                                    <h4><input type="checkbox" name="question{{ currentQuestionIndex }}" ng-model="answer.chosen" value="{{possibleAnswer.answer}}">{{answer.answer}}</h4>
+                                </label>
+                            </div>
+
+                            <div ng-if="getCurrentQuestion().question_type=='freeform'">
+                                <h4><textarea class="form-control" ng-change="answerChanged()" ng-model="getCurrentQuestion().candidate_answer" rows="5"></textarea></h4>
+                            </div>
+
+                            <div ng-if="getCurrentQuestion().question_type=='code'">
+                                <br />
+                                <div ui-ace="{theme:'crimson_editor',
+                                        mode:'csharp',
+                                        advanced: {fontSize: '15px'}}"
+                                     ng-model="getCurrentQuestion().filler_code"
+                                     ng-change="answerChanged()">
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                </table>
+                <h4 class="preText" ng-if="getCurrentQuestion().question_type=='section'">{{getCurrentQuestion().question_text}}</h4>
+
+                <h3><button type="submit" class="btn btn-primary" ng-click="previousQuestion()" ng-show="currentQuestionIndex > 0">Previous Question</button>
+                    <button type="submit" class="btn btn-primary pull-right" ng-click="nextQuestion()" ng-show="currentQuestionIndex < (test_data.test.questions.length - 1)">Next Question</button>
+                    <button type="submit" class="btn btn-success pull-right" ng-click="SaveTest()" ng-show="currentQuestionIndex == (test_data.test.questions.length - 1)">Submit Test</button></h3>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-primary" id="timeUp"  ng-if="testExpired()">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Thank you for your time.</h1>
+                <h3>The time allotted has run out and your test is now over.</h3>
+            </div>
+        </div>
+    </div>
+</section>

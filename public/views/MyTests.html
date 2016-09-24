@@ -1,0 +1,88 @@
+<style type="text/css">
+    .panel-body {
+        padding: 0px;
+    }
+
+    a {
+        cursor: pointer;
+        color: white;
+    }
+
+    /* show the move cursor as the user moves the mouse over the panel header.*/
+    .sortable-container .panel-heading {
+        cursor: move;
+    }
+
+    section {
+        padding: 50px 0;
+    }
+
+    h1 {
+        margin-top: 40px;
+        margin-bottom: 0px;
+    }
+
+    .h4, .h5, .h6, h4, h5, h6 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .moveButtons {
+        width: 30px;
+        display: inline-block;
+    }
+
+    .btn-group{
+        margin-bottom: 8px;
+    }
+
+    .iconButton {
+        cursor: pointer;
+    }
+</style>
+
+<section class="bg-primary" id="introduction" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span>
+                    <h1>Test Management</h1>
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="addQuestions">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Single button -->
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-primary" ng-click="addNewTest()">
+                        Add a new test
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sortable-container">
+                <!--<ul id="draggablePanelList" class="list-unstyled">-->
+                    <div class="panel panel-primary" ng-repeat="testObject in test_data">
+                        <div class="panel-heading" >
+                            <h4>
+                                <a href="#/TestSetup/{{testObject._id}}">{{testObject.test.test_name | uppercase}}</a>
+                                <span class="pull-right">
+                                    <i class="fa fa-times iconButton" title="Remove Test" ng-click="deleteTest(testObject._id)"></i>
+                                </span>
+                            </h4>
+                        </div>
+                    </div>
+                <!--</ul>-->
+                </div>
+                <span ui-view></span>
+            </div>
+        </div>
+    </div>
+</section>

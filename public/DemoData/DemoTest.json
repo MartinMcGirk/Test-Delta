@@ -1,0 +1,126 @@
+{
+  "test": {
+    "test_name": "Candidate Search Demo Test",
+    "time_limit": 10,
+    "questions": [
+      {
+        "question_text": "Smoke testing might best be described as:",
+        "possible_answers": [
+          {
+            "answer": "bulletproofing shrink-wrapped software",
+            "correct": false
+          },
+          {
+            "answer": "rolling integration testing",
+            "correct": true
+          },
+          {
+            "answer": "testing that hides implementation errors",
+            "correct": false
+          },
+          {
+            "answer": "unit testing for small programs",
+            "correct": false
+          }
+        ],
+        "correct_answer": "rolling integration testing",
+        "points_available": 10,
+        "question_type": "mcq"
+      },
+      {
+        "question_text": "Which of the following is an approach to debugging?",
+        "possible_answers": [
+          {
+            "answer": "backtracking",
+            "correct": false
+          },
+          {
+            "answer": "brute force",
+            "correct": true
+          },
+          {
+            "answer": "cause elimination",
+            "correct": false
+          },
+          {
+            "answer": "code restructuring",
+            "correct": false
+          }
+        ],
+        "correct_answer": "brute force",
+        "points_available": 10,
+        "question_type": "mcq"
+      },
+      {
+        "question_text": "Which of the following is NOT an Integer?",
+        "possible_answers": [
+          {
+            "answer": "Char",
+            "correct": true
+          },
+          {
+            "answer": "Byte",
+            "correct": false
+          },
+          {
+            "answer": "Integer",
+            "correct": false
+          },
+          {
+            "answer": "Short",
+            "correct": false
+          },
+          {
+            "answer": "Long",
+            "correct": false
+          }
+        ],
+        "correct_answer": "Char",
+        "points_available": 10,
+        "question_type": "mcq"
+      },
+      {
+        "question_text": "What is the size of a Decimal?",
+        "possible_answers": [
+          {
+            "answer": "4 byte",
+            "correct": false
+          },
+          {
+            "answer": "8 byte",
+            "correct": false
+          },
+          {
+            "answer": "16 byte",
+            "correct": true
+          },
+          {
+            "answer": "32 byte",
+            "correct": false
+          }
+        ],
+        "correct_answer": "16 byte",
+        "points_available": 10,
+        "question_type": "mcq"
+      },
+      {
+        "question_text": "Discuss the pros and cons of using a code generator",
+        "desired_keywords": "script, messy code, effort, time, unoptimised",
+        "points_available": 10,
+        "question_type": "freeform"
+      },
+      {
+        "question_text": "Write a program to reverse a string:",
+        "filler_code": "/// <summary>\n/// Your code should take the parameter inputString and \n/// return a reversed version of that string.\n/// </summary> \npublic string ReverseString(string inputString)\n{\n\t// Your Code Here\n\treturn string.empty;\n}",
+        "points_available": 30,
+        "question_type": "code"
+      },
+      {
+        "question_text": "Write a program to capitalise a string:",
+        "filler_code": "public void Foo(){\n\t// Your Code Here\n}",
+        "points_available": 30,
+        "question_type": "code"
+      }
+    ]
+  }
+}

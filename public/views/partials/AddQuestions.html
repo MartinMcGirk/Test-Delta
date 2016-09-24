@@ -1,0 +1,35 @@
+<section id="addQuestions">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Split button -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger">Add Question</button>
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a ui-sref="createTest.addQuestions.table">Add a multiple choice question</a></li>
+                        <li><a href="#">Add a freeform text question</a></li>
+                        <li><a href="#">Add a coding question</a></li>
+                    </ul>
+                </div>
+
+                <!-- Single button -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Action <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li ui-sref="addQuestions.table"><a>Add a multiple choice question</a></li>
+                        <li><a ui-sref="addQuestions.table">Add a freeform text question</a></li>
+                        <li><a ui-sref="addQuestions.table">Add a coding question</a></li>
+                    </ul>
+                </div>
+
+                <span ui-view></span>
+            </div>
+        </div>
+    </div>
+</section>
